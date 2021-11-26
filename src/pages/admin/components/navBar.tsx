@@ -1,5 +1,6 @@
 import type {FC} from 'react';
 import {AppBar, Toolbar} from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 import {makeStyles} from '@material-ui/core/styles'
 import '../styles/navBar.css';
 
@@ -19,6 +20,8 @@ const useStyles = makeStyles({
 
 const Compoenent:FC = ()=>{
     const styles = useStyles ();
+    const History = useHistory ();
+
     return (
         <AppBar className={styles.nav}>
             <Toolbar className={styles.root}>
@@ -27,8 +30,8 @@ const Compoenent:FC = ()=>{
                 </div>
 
                 <div className="ad-nav-items">
-                    <div className="ad-nav-item">Cook</div>
-                    <div className="ad-nav-item">Orders</div>
+                    <div className="ad-nav-item" onClick={()=>History.push ('/admin/cooks')}>Cook</div>
+                    <div className="ad-nav-item" onClick={()=>History.push ('/admin/customers')}>Orders</div>
                 </div>
 
             </Toolbar>

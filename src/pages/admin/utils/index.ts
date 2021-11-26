@@ -93,6 +93,8 @@ const getMenu = async (id:string)=>{
 
 const addCook = (cookData:any) => db.collection ("Cooks").doc ().set (cookData);
 
+const deleteCook = (id:string) => db.collection ("Cooks").doc (`${id}`).delete ().then (()=>console.log ("Deleted"));
 
 
-export {getCooks, getUsers, getOrders, verifyOrder, deleteOrder, verifyUsers, addCook, getMenu};
+
+export {getCooks, getUsers, getOrders, verifyOrder, deleteOrder, verifyUsers, addCook, getMenu, deleteCook};

@@ -1,7 +1,8 @@
 import type {FC} from 'react';
 import {useState, useEffect} from 'react';
-import {getCooks, addCook} from './utils';
-import {Card, Avatar, Button, Dialog, DialogTitle, TextField, Select, MenuItem, Collapse} from '@material-ui/core';
+import {getCooks, addCook, deleteCook} from './utils';
+import {Delete} from "@material-ui/icons"
+import {Card, Avatar, Button, Dialog, DialogTitle, TextField, Select, MenuItem, Collapse, IconButton} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import NavBar from './components/navBar';
 import './styles/index.css';
@@ -16,7 +17,9 @@ const Page:FC = ()=>{
     useEffect(()=>{ 
         getCooks ().then(cooks=>setCooks (cooks));
 
-    }, [])
+    }, [cooks])
+
+    const changeCookList = ()=>setCooks (cooks);
 
     return (
         <div className="admin-login">
@@ -27,7 +30,7 @@ const Page:FC = ()=>{
 
                 <div className="ad-card-cooks">
                     {
-                        cooks.map((cook:any)=><Carder name={cook.Name} rating={cook.Rating} image={cook.Profile_Image} region={cook.Region} state={cook.State}/>)
+                        cooks.map((cook:any)=><Carder name={cook.Name} rating={cook.Rating} image={cook.Profile_Image} id={cook.Id} region={cook.Region} fun={changeCookList} state={cook.State}/>)
                     }
                 </div>
 
@@ -47,7 +50,9 @@ interface CarderType {
     name: string,
     rating: string,
     region: string,
-    state: string
+    state: string,
+    id: string
+    fun: any
 }
 
 
@@ -57,7 +62,7 @@ const useCarderStyles = makeStyles ({
     }
 })
 
-const Carder:FC<CarderType> = ({name, rating, region, state, image})=>{
+const Carder:FC<CarderType> = ({name, rating, region, state, image, id, fun})=>{
 
     const styles = useCarderStyles ();
 
@@ -80,6 +85,22 @@ const Carder:FC<CarderType> = ({name, rating, region, state, image})=>{
                 <div className="ad-state">
                     State: {state}
                 </div>
+            </div>
+
+            <div className="ad-rows">
+                <div className="ad-ratings">
+                    Region: {region}
+                </div>
+
+                <IconButton onClick={()=>{
+                    if (window.confirm ("Are you sure you want to delete thiscook") ) {
+                            deleteCook (id)
+                            fun ()
+                    }
+                }}>
+                    <Delete />
+                </IconButton>
+
             </div>
 
 
