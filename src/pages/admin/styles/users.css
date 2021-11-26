@@ -1,0 +1,10 @@
+.admin-users-page-main {
+    padding: 3%;
+}
+
+
+.admin-users-card-row {
+    display: flex;
+    justify-content: space-between;
+}
+

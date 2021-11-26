@@ -1,0 +1,12 @@
+.admin-main-container {
+    padding: 5%;
+    height: 100vh;
+    width: 100vw;
+}
+
+.add-cooks-form-div {
+    display: flex;
+    justify-content: space-between;
+    width: 30vw;
+    padding: 3%;
+}
