@@ -91,10 +91,22 @@ const getMenu = async (id:string)=>{
 
 }
 
-const addCook = (cookData:any) => db.collection ("Cooks").doc ().set (cookData);
+const addMenu = async (id:string, menu:any)=>{
+
+    for (let key in menu) {
+        console.log (key, menu[key]);
+        db.collection ("Cooks").doc (`${id}`).collection ("Menu").doc (`${key}`).set (menu[key]);
+    }
+
+    
+}
+
+const addCook:any = async (cookData:any, menu:any) => {
+db.collection ("Cooks").add (cookData).then(res=>addMenu(res.id, menu));
+}
 
 const deleteCook = (id:string) => db.collection ("Cooks").doc (`${id}`).delete ().then (()=>console.log ("Deleted"));
 
 
 
-export {getCooks, getUsers, getOrders, verifyOrder, deleteOrder, verifyUsers, addCook, getMenu, deleteCook};
+export {getCooks, getUsers, getOrders, verifyOrder, deleteOrder, verifyUsers, addCook, getMenu, deleteCook, addMenu};

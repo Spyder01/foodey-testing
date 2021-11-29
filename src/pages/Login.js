@@ -97,19 +97,21 @@ const SignUp = () => {
             sx={{
               my: 16,
               height: "100vh",
+            
               mx: 4,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
             }}
           >
-            <img src={logo} width="100" alt="logo" />
+            <img src={logo} width="220" alt="logo" />
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
             <Box
               component="form"
               noValidate
+              width="400"
               onSubmit={handleSubmit}
               sx={{ mt: 1 }}
             >

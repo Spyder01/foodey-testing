@@ -1,6 +1,6 @@
 import type {FC} from 'react';
 import {useState, useEffect} from 'react';
-import {getCooks, addCook, deleteCook} from './utils';
+import {getCooks, addCook, deleteCook, addMenu} from './utils';
 import {Delete} from "@material-ui/icons"
 import {Card, Avatar, Button, Dialog, DialogTitle, TextField, Select, MenuItem, Collapse, IconButton} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
@@ -15,9 +15,9 @@ const Page:FC = ()=>{
     const handleCloseDialog = ()=>setOpen (false);
 
     useEffect(()=>{ 
-        getCooks ().then(cooks=>setCooks (cooks));
+        getCooks ().then(Cooks=>cooks!==Cooks?setCooks(Cooks):null);
 
-    }, [cooks])
+    }, [])
 
     const changeCookList = ()=>setCooks (cooks);
 
@@ -30,7 +30,8 @@ const Page:FC = ()=>{
 
                 <div className="ad-card-cooks">
                     {
-                        cooks.map((cook:any)=><Carder name={cook.Name} rating={cook.Rating} image={cook.Profile_Image} id={cook.Id} region={cook.Region} fun={changeCookList} state={cook.State}/>)
+                    
+                        cooks.map((cook:any)=><Carder name={cook.Name} rating={cook.Rating} image={cook.Profile_Image} id={cook.id} region={cook.Region} fun={changeCookList} state={cook.State}/>)
                     }
                 </div>
 
@@ -94,6 +95,7 @@ const Carder:FC<CarderType> = ({name, rating, region, state, image, id, fun})=>{
 
                 <IconButton onClick={()=>{
                     if (window.confirm ("Are you sure you want to delete thiscook") ) {
+                            console.log (id)
                             deleteCook (id)
                             fun ()
                     }
@@ -201,12 +203,17 @@ const DialogBox:FC<DialogBoxTypes> = ({open, handleCloseDialog})=> {
         Veg_Curry: ""
     });
 
+    const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
+    const forTextField = ["Dal", "Non_Veg_Curry", "Raita_Salad", "Rice", "Roti", "Sabji", "Veg_Curry"];
+
     const [day, setDay]:any = useState ("Sunday"); 
     const [collapse, setCollapse] = useState (false);
 
     const handleAddMenu = ()=>{
         var Menu = menu;
         Menu [day] = items;
+        console.table (Menu)
         setMenu (Menu);
         setItems ({
             Dal: "",
@@ -244,7 +251,9 @@ const DialogBox:FC<DialogBoxTypes> = ({open, handleCloseDialog})=> {
                             Ratings: ratings,
                             Speciality: speciality,
                             Years_Of_Experience: years
-                        })
+                        }, menu).then ((res:any)=>{
+                  handleCloseDialog () 
+                        })         
                 }} >
 <div className="add-cooks-form-div">
                     <TextField label="Name" variant="standard" value={name} onChange={(e)=>setName (e.target.value)} required/>
@@ -264,13 +273,9 @@ const DialogBox:FC<DialogBoxTypes> = ({open, handleCloseDialog})=> {
 </div>     
 <div className="add-cooks-form-div">
                     <Select label="Day" value = {day} onChange={(e):any=>setDay (e.target.value)}>
-                        <MenuItem value="Sunday">Sunday</MenuItem>
-                        <MenuItem value="Monday">Monday</MenuItem>
-                        <MenuItem value="Tuesday">Tuesday</MenuItem>
-                        <MenuItem value="Wednesday">Wednesday</MenuItem>
-                        <MenuItem value="Thursday">Thursday</MenuItem>
-                        <MenuItem value="Friday">Friday</MenuItem>
-                        <MenuItem value="Saturday">Saturday</MenuItem>
+                        {
+                            weekDays.map ((day=><MenuItem value={day}>{day}</MenuItem>))
+                        }
                     </Select>
 
                     <Button onClick = {()=>{setCollapse (!collapse)}}>
@@ -279,6 +284,9 @@ const DialogBox:FC<DialogBoxTypes> = ({open, handleCloseDialog})=> {
 </div>
 
 <Collapse in={collapse}>
+        {/*
+            forTextField.map ((ele:any)=><TextFieldComponent label={ele.toString().replace("_", " ")} itemName={ele} day={day} setMenu={setMenu} setItems={setItems} items={items} />)
+        */ }
         <TextField label="Dal" value={items.Dal} onChange={(e)=>setMenu ((menu:any)=>{
             const Day = menu[day];
             console.log (menu)
@@ -355,10 +363,12 @@ const DialogBox:FC<DialogBoxTypes> = ({open, handleCloseDialog})=> {
 
             
             return menu;
-        })} />
+        })} /> 
+
+
 
         <div>
-            <Button onClick={()=>handleAddMenu} color={"primary"}>Add</Button>
+            <Button onClick={handleAddMenu} color={"primary"}>Add</Button>
         </div>
 </Collapse>
 
@@ -386,3 +396,22 @@ interface MenuItemGetterType {
 
 }
 
+const TextFieldComponent = ({label, itemName, day, setMenu, setItems, items}:any)=>{
+        
+    return (
+                    <TextField label={label} value={items[itemName]} onChange={(e)=>setMenu ((menu:any)=>{      
+                            console.log (itemName)
+                            const Day = menu[day];
+                            console.log (day)
+                            Day[itemName] = e.target.value;
+
+                            setItems ((items:any)=>{
+                                    items[itemName] = e.target.value;
+                                    return items;
+                            });     
+
+                            menu [day] = Day;
+                            return menu;
+                    })}/>
+    )
+}

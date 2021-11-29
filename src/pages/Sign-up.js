@@ -106,7 +106,7 @@ const Login = () => {
               alignItems: "center",
             }}
           >
-            <img src={logo} width="100" alt="logo" />
+            <img src={logo} width="220" alt="logo" />
             <Typography component="h1" variant="h5">
               Sign Up
             </Typography>

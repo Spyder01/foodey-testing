@@ -1,7 +1,9 @@
 import type {FC} from 'react';
 import {AppBar, Toolbar} from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
+import {useRecoilValue} from 'recoil';
 import {makeStyles} from '@material-ui/core/styles'
+import Store from '../../../store';
 import '../styles/navBar.css';
 
 
@@ -21,6 +23,9 @@ const useStyles = makeStyles({
 const Compoenent:FC = ()=>{
     const styles = useStyles ();
     const History = useHistory ();
+    const Admin = useRecoilValue (Store.isAdmin);
+
+    if (!Admin) History.push ("/");
 
     return (
         <AppBar className={styles.nav}>
